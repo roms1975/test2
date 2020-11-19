@@ -172,10 +172,6 @@ class SiteController extends Controller
 			foreach (Yii::$app->request->post('User') as $id => $row) {
 				$user = User::findOne($id);
 				$user->role = $row['role'];
-				
-error_log(print_r($user, true), 3, Yii::getAlias('@app/log/roms.log'));
-error_log("---------------------------------\n", 3, Yii::getAlias('@app/log/roms.log'));
-				
 				$user->save();
 			}
 		}
