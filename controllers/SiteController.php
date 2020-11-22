@@ -11,6 +11,8 @@ use app\models\LoginForm;
 use app\models\User;
 use app\models\ContactForm;
 use app\models\Chat;
+use app\models\Roles;
+use app\models\Assigment;
 
 class SiteController extends Controller
 {
@@ -167,19 +169,36 @@ class SiteController extends Controller
 	
 	public function actionEditusers() {
 		$model = new User();
+		$roles = Roles::find()
+					->select('name')
+					->where(['type' => 1])
+					->asArray()
+					->all();
 		
 		if (!empty(Yii::$app->request->post('User'))) {
+			
 			foreach (Yii::$app->request->post('User') as $id => $row) {
-				$user = User::findOne($id);
-				$user->role = $row['role'];
-				$user->save();
+				$model2 = new Assigment();
+				$role = $model2->findOne(['user_id' => $id]);
+				if (!$role) {
+					$model2->item_name = $row['role'];
+					$model2->user_id = $id;
+					$model2->created_at = strtotime('now');
+					$model2->save();
+				} else if (empty($row['role'])) {
+					$role->delete();
+				} else {
+					$role->item_name = $row['role'];
+					$role->save();
+				}
 			}
 		}
-		
+
 		$users = $model->find()->all();
 		
 		return $this->render('showusers', [
 			'users' => $users,
+			'roles' => $roles,
 		]);
 	}
 	

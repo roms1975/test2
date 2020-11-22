@@ -105,4 +105,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         $this->password_reset_token = null;
     }
+	
+	public function getAssigment() 
+	{
+		return $this->hasOne(Assigment::className(), ['user_id' => 'id']);
+	}
 }
