@@ -17,7 +17,7 @@ $this->title = 'Некорректные сообщения';
 		foreach ($messages as $key => $message) {
 			echo (
 				'<span>' . 
-					$message['message'] . 
+					Html::encode($message['message']) . 
 					$form->field($message, 'correct')
 						->checkbox(['label' => ' Отметить как корректное', 'name' => 'Chat[correct][' . $message['id'] . ']']) .
 				'</span>' .

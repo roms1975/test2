@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'My Yii Application';
-//print_r($messages); 
 ?>
 <div class="site-index">
 
@@ -20,17 +19,19 @@ $this->title = 'My Yii Application';
 			],
 		]);
 		echo (
-			'<form method="post">' .
-				'<p>' . 
-					$message['message'] . 
-					'<input name="off-message" value="' . $message['id'] . '" hidden>' . 
-					($message['correct'] ? 
-						Html::submitButton('Отметить как некорректное', ['class' => 'btn btn-primary uncorrect', 'name' => 'off-button']) :
-					'<span class="warn">Некорректное сообщение</span>') .
-					($admin_id == $message['user'] ? '<span class="adm-message">Сообщение от администратора<span>' : '').
-				'</p>' .
-			'</form>' .
-			'<hr />'
+			'<div class="chat">' .
+				'<form method="post">' .
+					'<p>' . 
+						Html::encode($message['message']) . 
+						'<input name="off-message" value="' . $message['id'] . '" hidden>' . 
+						($message['correct'] ? 
+							Html::submitButton('Отметить как некорректное', ['class' => 'btn btn-primary uncorrect', 'name' => 'off-button']) :
+						'<span class="warn">Некорректное сообщение</span>') .
+						($admin_id == $message['user'] ? '<span class="adm-message">Сообщение от администратора<span>' : '').
+					'</p>' .
+				'</form>' .
+				'<hr />' .
+			'</div>'
 		);
 		ActiveForm::end();
 	}
@@ -46,6 +47,7 @@ $this->title = 'My Yii Application';
 			],
 		]); 
 
+		echo '<div class="chat">';
         echo $form->field($model, 'message')->textarea(['rows' => 2, 'cols' => 5])->label('Сообщение');
 		echo (
 			'<div class="form-group">' .
@@ -54,12 +56,11 @@ $this->title = 'My Yii Application';
 				'</div>' .
 			'</div>'
 		);
+		echo '</div>';
 
 		ActiveForm::end();
 	
 	}
 ?> 
-
-
 
 </div>

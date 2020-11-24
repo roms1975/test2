@@ -50,17 +50,6 @@ $this->title = 'Пользователи';
 							])
 							->label(false) .
 					'</span>' .
-					/*
-					'<span class="col-md-3">' . 
-						$form->field($user, 'role')
-							->textInput(['name' => 'User[' . $user['id'] . '][role]'])
-							->label('Роль') .
-					'</span>' .
-					
-					'<span class="col-md-3">' .
-						'<input class="form-control" type=text name=User[' . $user['id'] . '][role] value="' . $role . '" >' .
-					'</span>' .
-					*/
 					'<span class="col-md-3">' .
 						Html::dropDownList('User[' . $user['id'] . '][role]', 'null', $roles_arr, $params) .
 					'</span>' .

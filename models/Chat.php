@@ -15,17 +15,17 @@ class Chat extends ActiveRecord
     {
         return [
             [['user', 'message'], 'required'],
-            [['correct'], 'integer']            
+            [['correct'], 'boolean']            
         ];
     }
 
     public static function getMessages()
     {
-        return static::find()->where(['correct' => 1])->all();
+        return static::find()->where(['correct' => true])->all();
     }
 	
     public static function getUncorrect()
     {
-        return static::find()->where(['!=', 'correct',  1])->all();
+        return static::find()->where(['!=', 'correct',  true])->all();
     }
 }

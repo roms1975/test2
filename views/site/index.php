@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'My Yii Application';
-//print_r($messages);
 ?>
 <div class="site-index">
 
@@ -12,7 +11,7 @@ $this->title = 'My Yii Application';
 	foreach ($messages as $key => $message) {
 		echo (
 			'<div class="chat">' .
-				'<p>' . $message['message'] . '</p>' .
+				'<p>' . Html::encode($message['message']) . '</p>' .
 				'<hr />' .
 			'</div>'
 		);
@@ -39,10 +38,7 @@ $this->title = 'My Yii Application';
 		);
 
 		ActiveForm::end();
-	
 	}
 ?> 
-
-
 
 </div>

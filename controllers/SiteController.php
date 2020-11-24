@@ -16,49 +16,49 @@ use app\models\Assigment;
 
 class SiteController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'uncorrect'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
+	public function behaviors()
+	{
+		return [
+			'access' => [
+				'class' => AccessControl::className(),
+				'only' => ['logout', 'uncorrect'],
+				'rules' => [
 					[
-                        'actions' => ['uncorrect'],
-                        'allow' => true,
-                        'roles' => ['updateUncorrect'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
+						'actions' => ['logout'],
+						'allow' => true,
+						'roles' => ['@'],
+					],
+					[
+						'actions' => ['uncorrect'],
+						'allow' => true,
+						'roles' => ['updateUncorrect'],
+					],
+				],
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'logout' => ['post'],
+				],
+			],
+		];
+	}
 
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
+	public function actions()
+	{
+		return [
+			'error' => [
+				'class' => 'yii\web\ErrorAction',
+			],
+			'captcha' => [
+				'class' => 'yii\captcha\CaptchaAction',
+				'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+			],
+		];
+	}
 
-    public function actionIndex()
-    {
+	public function actionIndex()
+	{
 		$model = new Chat();
 
 		if (Yii::$app->user->can('admin')) {
@@ -77,48 +77,48 @@ class SiteController extends Controller
 			]);
 		}
 
-    }
+	}
 
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+	public function actionLogin()
+	{
+		if (!Yii::$app->user->isGuest) {
+			return $this->goHome();
+		}
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
+		$model = new LoginForm();
+		if ($model->load(Yii::$app->request->post()) && $model->login()) {
+			return $this->goBack();
+		}
 
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
+		$model->password = '';
+		return $this->render('login', [
+			'model' => $model,
+		]);
+	}
 
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
+	public function actionLogout()
+	{
+		Yii::$app->user->logout();
 
-        return $this->goHome();
-    }
+		return $this->goHome();
+	}
 
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+	public function actionContact()
+	{
+		$model = new ContactForm();
+		if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+			Yii::$app->session->setFlash('contactFormSubmitted');
 
-            return $this->refresh();
-        }
-		
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
+			return $this->refresh();
+		}
 
-    public function actionUncorrect()
-    {
+		return $this->render('contact', [
+			'model' => $model,
+		]);
+	}
+
+	public function actionUncorrect()
+	{
 		$model = new Chat();
 		if (!empty(Yii::$app->request->post('Chat')['correct'])) {
 			$rows = Yii::$app->request->post('Chat')['correct'];
@@ -133,10 +133,10 @@ class SiteController extends Controller
 		}
 
 		$messages = $model->getUncorrect();
-        return $this->render('uncorrect', [
+		return $this->render('uncorrect', [
 			'messages' => $messages,
 		]);
-    }
+	}
 
 	public function actionAddmessage() {
 		if (Yii::$app->user->isGuest)
@@ -176,10 +176,10 @@ class SiteController extends Controller
 					->all();
 		
 		if (!empty(Yii::$app->request->post('User'))) {
-			
 			foreach (Yii::$app->request->post('User') as $id => $row) {
 				$model2 = new Assigment();
 				$role = $model2->findOne(['user_id' => $id]);
+				
 				if (!$role) {
 					$model2->item_name = $row['role'];
 					$model2->user_id = $id;
@@ -191,6 +191,8 @@ class SiteController extends Controller
 					$role->item_name = $row['role'];
 					$role->save();
 				}
+				
+				$this->refresh();
 			}
 		}
 
@@ -201,22 +203,4 @@ class SiteController extends Controller
 			'roles' => $roles,
 		]);
 	}
-	
-/*	
-	public function actionAdduser() 
-	{
-		if (empty($model)) {
-			$user = new User();
-			$user->username = 'user1';
-			$user->email = 'user1@ya.ru';
-			$user->setPassword('user1');
-			$user->generateAuthKey();
-			if ($user->save()) {
-				echo 'good';
-			} else {
-				echo 'fail';
-			}
-		}
-	}
-*/	
 }
