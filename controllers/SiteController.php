@@ -103,33 +103,13 @@ class SiteController extends Controller
 		return $this->goHome();
 	}
 
-	public function actionContact()
-	{
-		$model = new ContactForm();
-		if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-			Yii::$app->session->setFlash('contactFormSubmitted');
-
-			return $this->refresh();
-		}
-
-		return $this->render('contact', [
-			'model' => $model,
-		]);
-	}
-
 	public function actionUncorrect()
 	{
 		$model = new Chat();
-		if (!empty(Yii::$app->request->post('Chat')['correct'])) {
-			$rows = Yii::$app->request->post('Chat')['correct'];
-			foreach ($rows as $key => $data) {
-				$row = $model->find()->where('id = :id', [':id' => $key])->one();
-				if (!$row)
-					continue;
-				
-				$row->correct = addslashes($data);
-				$row->save();
-			}
+		$post = !empty(Yii::$app->request->post('Chat')['correct']) ? Yii::$app->request->post('Chat')['correct'] : '';
+		if ($post) {
+			$model->onMessage($post);
+			$this->refresh();
 		}
 
 		$messages = $model->getUncorrect();
@@ -145,9 +125,8 @@ class SiteController extends Controller
 		$model = new Chat();
 		
 		if ($model->load(Yii::$app->request->post())) {
-			$model->user = Yii::$app->user->getId();
-			$model->correct = 1;
-			$model->save();
+			$user = Yii::$app->user->getId();		
+			$model->saveNewMessage($user);
 		} else {
 			echo "Error adding record<br>";
 		}
@@ -158,12 +137,8 @@ class SiteController extends Controller
 	public function actionOffmessage() {
 		$id = isset(Yii::$app->request->post()['off-message']) ? addslashes(Yii::$app->request->post()['off-message']) : '';
 		$model = new Chat();
-		$row = $model->find()->where('id = :id', [':id' => $id])->one();
-		if (!empty($row)) {
-			$row->correct = 0;
-			$row->save();
-		}
-		
+		$model->offMesssage($id);
+
 		return $this->goHome();
 	}
 	
@@ -175,25 +150,11 @@ class SiteController extends Controller
 					->asArray()
 					->all();
 		
-		if (!empty(Yii::$app->request->post('User'))) {
-			foreach (Yii::$app->request->post('User') as $id => $row) {
-				$model2 = new Assigment();
-				$role = $model2->findOne(['user_id' => $id]);
-				
-				if (!$role) {
-					$model2->item_name = $row['role'];
-					$model2->user_id = $id;
-					$model2->created_at = strtotime('now');
-					$model2->save();
-				} else if (empty($row['role'])) {
-					$role->delete();
-				} else {
-					$role->item_name = $row['role'];
-					$role->save();
-				}
-				
-				$this->refresh();
-			}
+		$post = Yii::$app->request->post('User') !== null ? Yii::$app->request->post('User') : '';
+		if (!empty($post)) {
+			$model2 = new Assigment();
+			$model2->saveRoles($post);
+			$this->refresh();
 		}
 
 		$users = $model->find()->all();
