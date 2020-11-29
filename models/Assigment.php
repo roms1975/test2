@@ -6,6 +6,13 @@ use yii\db\ActiveRecord;
 
 class Assigment extends ActiveRecord
 {	
+	public function rules()
+    {
+        return [
+            [['item_name'], 'safe'],
+        ];
+    }
+
 	public static function tableName()
     {
         return 'auth_assignment';
@@ -30,5 +37,22 @@ class Assigment extends ActiveRecord
 		}
 		
 		return true;
+	}
+	
+	public function attributeLabels()
+    {
+        return [
+            'item_name' => 'Роль',
+        ];
+    } 
+	
+	public function createNewAssigment($user_id)
+	{
+		$this->item_name = 'author';
+		$this->user_id = $user_id;
+		if ($this->save())
+			return true;
+		
+		return false;
 	}
 }

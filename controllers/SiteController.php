@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\User;
+use app\models\UserSearch;
 use app\models\ContactForm;
 use app\models\Chat;
 use app\models\Roles;
@@ -38,7 +39,8 @@ class SiteController extends Controller
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'logout' => ['post'],
+					'logout' => ['POST'],
+					'delete' => ['POST'],
 				],
 			],
 		];
@@ -140,28 +142,5 @@ class SiteController extends Controller
 		$model->offMesssage($id);
 
 		return $this->goHome();
-	}
-	
-	public function actionEditusers() {
-		$model = new User();
-		$roles = Roles::find()
-					->select('name')
-					->where(['type' => 1])
-					->asArray()
-					->all();
-		
-		$post = Yii::$app->request->post('User') !== null ? Yii::$app->request->post('User') : '';
-		if (!empty($post)) {
-			$model2 = new Assigment();
-			$model2->saveRoles($post);
-			$this->refresh();
-		}
-
-		$users = $model->find()->all();
-		
-		return $this->render('showusers', [
-			'users' => $users,
-			'roles' => $roles,
-		]);
 	}
 }

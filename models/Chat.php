@@ -51,7 +51,6 @@ class Chat extends ActiveRecord
 	
 	public function onMessage($post)
 	{
-		//$rows = Yii::$app->request->post('Chat')['correct'];
 		foreach ($post as $key => $data) {
 			$row = $this->find()->where('id = :id', [':id' => $key])->one();
 			if (!$row)

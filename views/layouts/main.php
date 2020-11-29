@@ -34,7 +34,7 @@ AppAsset::register($this);
             ['label' => 'Некорректные сообщения', 'url' => ['/site/uncorrect']]
 			: '',
 			Yii::$app->user->can('updateUncorrect') ? 
-            ['label' => 'Пользователи', 'url' => ['/site/editusers']]
+            ['label' => 'Пользователи', 'url' => ['/role/index']]
 			: '',
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]

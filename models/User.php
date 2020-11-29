@@ -30,10 +30,16 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             [['username', 'password_hash'], 'required'],
-            [['username', 'password_hash'], 'string', 'max' => 100]            
+            [['username', 'password_hash', 'email'], 'string', 'max' => 100]            
         ];
     }
-
+	
+	public function attributeLabels()
+    {
+        return [
+            'username' => 'Пользователь',
+        ];
+    } 
 
     public static function findIdentity($id)
     {
@@ -56,8 +62,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $parts = explode('_', $token);
         $timestamp = (int) end($parts);
         if ($timestamp + $expire < time()) {
-            // token expired
-            return null;
+
+			return null;
         }
 
         return static::findOne([
@@ -106,7 +112,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $this->password_reset_token = null;
     }
 	
-	public function getAssigment() 
+	public function getRoles() 
 	{
 		return $this->hasOne(Assigment::className(), ['user_id' => 'id']);
 	}
