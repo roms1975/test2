@@ -1,0 +1,12 @@
+{
+    "name": "roms1975/test2",
+    "authors": [
+        {
+            "name": "Roman",
+            "email": "odggbo@gmail.com",
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.13",
+    }
+}
