@@ -4,6 +4,7 @@
         {
             "name": "Roman",
             "email": "odggbo@gmail.com",
+            "minimum-stability":"stable",
         }
     ],
     "require": {
