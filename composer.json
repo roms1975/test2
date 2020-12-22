@@ -9,5 +9,8 @@
     ],
     "autoload": {
         "psr-4": {"roms1975\\test2\\": ""}
+    },
+    "require": {
+        "yiisoft/yii2": "~2.0.13"
     }
 }
